@@ -1,0 +1,71 @@
+Using pip 26.0.1 from D:\Miniconda3\envs\Gaussians4D\lib\site-packages\pip (python 3.9)
+Non-user install because site-packages writeable
+Disabling truststore because Python version isn't 3.10+
+Created temporary directory: C:\Users\mohan\AppData\Local\Temp\pip-build-tracker-68w7uhwc
+Initialized build tracking at C:\Users\mohan\AppData\Local\Temp\pip-build-tracker-68w7uhwc
+Created build tracker: C:\Users\mohan\AppData\Local\Temp\pip-build-tracker-68w7uhwc
+Entered build tracker: C:\Users\mohan\AppData\Local\Temp\pip-build-tracker-68w7uhwc
+Created temporary directory: C:\Users\mohan\AppData\Local\Temp\pip-install-3at4f5sp
+Created temporary directory: C:\Users\mohan\AppData\Local\Temp\pip-ephem-wheel-cache-9b87o5gq
+Processing .\submodules\depth-diff-gaussian-rasterization
+  Added file:///E:/4DGaussians/submodules/depth-diff-gaussian-rasterization to build tracker 'C:\\Users\\mohan\\AppData\\Local\\Temp\\pip-build-tracker-68w7uhwc'
+  Created temporary directory: C:\Users\mohan\AppData\Local\Temp\pip-modern-metadata-5f42sa5r
+  Preparing metadata (pyproject.toml): started
+  Running command Preparing metadata (pyproject.toml)
+  running dist_info
+  creating C:\Users\mohan\AppData\Local\Temp\pip-modern-metadata-5f42sa5r\diff_gaussian_rasterization.egg-info
+  writing C:\Users\mohan\AppData\Local\Temp\pip-modern-metadata-5f42sa5r\diff_gaussian_rasterization.egg-info\PKG-INFO
+  writing dependency_links to C:\Users\mohan\AppData\Local\Temp\pip-modern-metadata-5f42sa5r\diff_gaussian_rasterization.egg-info\dependency_links.txt
+  writing top-level names to C:\Users\mohan\AppData\Local\Temp\pip-modern-metadata-5f42sa5r\diff_gaussian_rasterization.egg-info\top_level.txt
+  writing manifest file 'C:\Users\mohan\AppData\Local\Temp\pip-modern-metadata-5f42sa5r\diff_gaussian_rasterization.egg-info\SOURCES.txt'
+  reading manifest file 'C:\Users\mohan\AppData\Local\Temp\pip-modern-metadata-5f42sa5r\diff_gaussian_rasterization.egg-info\SOURCES.txt'
+  adding license file 'LICENSE.md'
+  writing manifest file 'C:\Users\mohan\AppData\Local\Temp\pip-modern-metadata-5f42sa5r\diff_gaussian_rasterization.egg-info\SOURCES.txt'
+  creating 'C:\Users\mohan\AppData\Local\Temp\pip-modern-metadata-5f42sa5r\diff_gaussian_rasterization-0.0.0.dist-info'
+  Preparing metadata (pyproject.toml): finished with status 'done'
+  Source in .\submodules\depth-diff-gaussian-rasterization has version 0.0.0, which satisfies requirement diff_gaussian_rasterization==0.0.0 from file:///E:/4DGaussians/submodules/depth-diff-gaussian-rasterization
+  Removed diff_gaussian_rasterization==0.0.0 from file:///E:/4DGaussians/submodules/depth-diff-gaussian-rasterization from build tracker 'C:\\Users\\mohan\\AppData\\Local\\Temp\\pip-build-tracker-68w7uhwc'
+Created temporary directory: C:\Users\mohan\AppData\Local\Temp\pip-unpack-tylw6o86
+Building wheels for collected packages: diff_gaussian_rasterization
+  Destination directory: c:\users\mohan\appdata\local\pip\cache\wheels\a0\e9\60\781b23163ddd27fb3f79817e3aaddc76887d14ee80b7cfe9a3\tmpgr1cae90
+  Building wheel for diff_gaussian_rasterization (pyproject.toml): started
+  Running command Building wheel for diff_gaussian_rasterization (pyproject.toml)
+  running bdist_wheel
+  running build
+  running build_py
+  copying diff_gaussian_rasterization\__init__.py -> build\lib.win-amd64-cpython-39\diff_gaussian_rasterization
+  running build_ext
+  error: [WinError 2] The system cannot find the file specified
+  error: subprocess-exited-with-error
+  
+  Building wheel for diff_gaussian_rasterization (pyproject.toml) did not run successfully.
+  exit code: 1
+  
+  No available output.
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+  full command: 'D:\Miniconda3\envs\Gaussians4D\python.exe' 'D:\Miniconda3\envs\Gaussians4D\lib\site-packages\pip\_vendor\pyproject_hooks\_in_process\_in_process.py' build_wheel 'C:\Users\mohan\AppData\Local\Temp\tmpdcoeb7ac'
+  cwd: E:\4DGaussians\submodules\depth-diff-gaussian-rasterization
+  Building wheel for diff_gaussian_rasterization (pyproject.toml): finished with status 'error'
+  ERROR: Failed building wheel for diff_gaussian_rasterization
+Failed to build diff_gaussian_rasterization
+Remote version of pip: 26.0.1
+Local version of pip:  26.0.1
+Was pip installed by pip? False
+error: failed-wheel-build-for-install
+
+Failed to build installable wheels for some pyproject.toml based projects
+
+diff_gaussian_rasterization
+Exception information:
+Traceback (most recent call last):
+  File "D:\Miniconda3\envs\Gaussians4D\lib\site-packages\pip\_internal\cli\base_command.py", line 107, in _run_wrapper
+    status = _inner_run()
+  File "D:\Miniconda3\envs\Gaussians4D\lib\site-packages\pip\_internal\cli\base_command.py", line 98, in _inner_run
+    return self.run(options, args)
+  File "D:\Miniconda3\envs\Gaussians4D\lib\site-packages\pip\_internal\cli\req_command.py", line 96, in wrapper
+    return func(self, options, args)
+  File "D:\Miniconda3\envs\Gaussians4D\lib\site-packages\pip\_internal\commands\install.py", line 444, in run
+    raise InstallWheelBuildError(build_failures)
+pip._internal.exceptions.InstallWheelBuildError: <InstallWheelBuildError: failed-wheel-build-for-install>
+Removed build tracker: 'C:\\Users\\mohan\\AppData\\Local\\Temp\\pip-build-tracker-68w7uhwc'

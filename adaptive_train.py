@@ -290,26 +290,16 @@ def scene_reconstruction(dataset, opt, hyper, pipe, testing_iterations, saving_i
                         gaussians.xyz_gradient_accum *= keep_mask.float()
                         gaussians.denom *= keep_mask.float()
                     
-                    # Densify only selected points
-                                       # Densify only selected points
-                    gaussians.densify(densify_threshold, opacity_threshold, scene.cameras_extent, size_threshold, 5, 5, scene.model_path, iteration, stage)
-                    
-                    # FIX: Pad prune_mask to match new point count after densification
-                    old_num = prune_mask.shape[0]
-                    new_num = gaussians.get_xyz.shape[0]
-                    if new_num > old_num:
-                        prune_mask = torch.cat([
-                            prune_mask, 
-                            torch.zeros(new_num - old_num, dtype=torch.bool, device='cuda')
-                        ])
-                    
-                    # Apply adaptive pruning mask
+                    # Prune before densifying: densify_and_split removes and reorders points,
+                    # so a mask computed here no longer lines up with the model afterwards.
+                    # prune_points slices the gradient accumulators with the same mask, so the
+                    # densify selection above stays aligned.
                     if prune_mask.sum() > 0:
-                        try:
-                            gaussians.prune_points(prune_mask)
-                        except AttributeError:
-                            gaussians.prune(densify_threshold, opacity_threshold, scene.cameras_extent, size_threshold)
-                    
+                        gaussians.prune_points(prune_mask)
+
+                    # Densify only selected points
+                    gaussians.densify(densify_threshold, opacity_threshold, scene.cameras_extent, size_threshold, 5, 5, scene.model_path, iteration, stage)
+
                     if iteration % 1000 == 0:
                         adaptive_manager.visualize(gaussians, iteration)
 
@@ -329,6 +319,8 @@ def scene_reconstruction(dataset, opt, hyper, pipe, testing_iterations, saving_i
             if (iteration in checkpoint_iterations):
                 print("\n[ITER {}] Saving Checkpoint".format(iteration))
                 torch.save((gaussians.capture(), iteration), scene.model_path + "/chkpnt" +f"_{stage}_" + str(iteration) + ".pth")
+    if stage == "fine":
+        adaptive_manager.create_summary()
 def training(dataset, hyper, opt, pipe, testing_iterations, saving_iterations, checkpoint_iterations, checkpoint, debug_from, expname):
     # first_iter = 0
     tb_writer = prepare_output_and_logger(expname)
@@ -343,9 +335,6 @@ def training(dataset, hyper, opt, pipe, testing_iterations, saving_iterations, c
     scene_reconstruction(dataset, opt, hyper, pipe, testing_iterations, saving_iterations,
                          checkpoint_iterations, checkpoint, debug_from,
                          gaussians, scene, "fine", tb_writer, opt.iterations,timer)
-    print("\n" + "="*60)
-    print("Creating Adaptive Density Summary...")
-    print("="*60)
 
 def prepare_output_and_logger(expname):    
     if not args.model_path:
@@ -441,7 +430,7 @@ if __name__ == "__main__":
     parser.add_argument('--port', type=int, default=6009)
     parser.add_argument('--debug_from', type=int, default=-1)
     parser.add_argument('--detect_anomaly', action='store_true', default=False)
-    parser.add_argument("--test_iterations", nargs="+", type=int, default=[3000,7000,14000])
+    parser.add_argument("--test_iterations", nargs="+", type=int, default=[3000,7000,14000,20000])
     parser.add_argument("--save_iterations", nargs="+", type=int, default=[ 14000, 20000, 30_000, 45000, 60000])
     parser.add_argument("--quiet", action="store_true")
     parser.add_argument("--checkpoint_iterations", nargs="+", type=int, default=[])

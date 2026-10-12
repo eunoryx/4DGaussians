@@ -67,7 +67,9 @@ class AdaptiveDensityManager:
             'low_complexity': low_complexity.cpu()
         }
         self.stats_history.append(stats)
-        
+        # Positions the scores above belong to; the model is pruned and densified before visualize() runs
+        self.last_xyz = gaussians.get_xyz.detach().cpu().numpy()
+
         print(f"\n[Adaptive Density - Iter {iteration}]")
         print(f"  Total: {num_gaussians} | High: {stats['high_complexity_count']} | Low: {stats['low_complexity_count']}")
         print(f"  To Densify: {stats['densify_count']} | To Prune: {stats['prune_count']}")
@@ -79,7 +81,7 @@ class AdaptiveDensityManager:
             return
         
         stats = self.stats_history[-1]
-        xyz = gaussians._xyz.detach().cpu().numpy()
+        xyz = self.last_xyz
         scores = stats['complexity_scores'].numpy()
         high_comp = stats['high_complexity'].numpy()
         low_comp = stats['low_complexity'].numpy()

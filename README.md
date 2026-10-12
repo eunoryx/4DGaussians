@@ -43,6 +43,10 @@ D-NeRF `bouncingballs`, 20,000 iterations (3,000 coarse), config `arguments/dner
 
 Gaussian counts are read from the saved `point_cloud.ply` files, times and PSNR from each run's `train.log`. The two runs were made back to back on the same machine.
 
+![Gaussian count during training for the baseline and adaptive runs](assets/gaussian_count.png)
+
+Gaussian count at every 100th training step, parsed from the two logs. Both runs stop growing when densification ends at fine-stage iteration 15,000.
+
 ### Limits of these results
 
 - One scene, one run per method. Three separate baseline runs gave 39.82 to 39.93 dB at iteration 14,000, so the PSNR difference is of the same order as run-to-run variation and should be read as "no loss", not as a gain.

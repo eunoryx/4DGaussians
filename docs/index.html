@@ -5,121 +5,124 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Complexity-Aware Density Management for 4D Gaussian Splatting</title>
 <meta name="description" content="Adaptive density control for 4D Gaussian Splatting: more Gaussians where a dynamic scene is complex, fewer where it is simple.">
-<meta name="theme-color" content="#0b0e13">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230b0e13'/%3E%3Cellipse cx='13' cy='17' rx='9' ry='6' fill='%2364d868' opacity='.9'/%3E%3Cellipse cx='22' cy='12' rx='5' ry='4' fill='%23d9e2e9' opacity='.8'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#efe9d6">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23efe9d6'/%3E%3Cellipse cx='14' cy='18' rx='9' ry='6' fill='%23151411'/%3E%3Cellipse cx='22' cy='11' rx='5' ry='4' fill='%2386bfb3'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..600,0..100&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Instrument+Serif&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header class="hero" id="top">
-  <canvas class="hero__canvas" id="hero-canvas" aria-hidden="true"></canvas>
-  <div class="hero__text wrap">
-    <p class="eyebrow">Rishita Mohan · Shiv Nadar University</p>
-    <h1>Complexity-Aware Density Management <span class="h1-sub">for 4D Gaussian Splatting</span></h1>
-    <p class="lede">Adaptive density control that adds Gaussians where a dynamic scene is complex and removes them where it is simple.</p>
-    <p class="hero__note">
-      <span id="hero-caption">738 blobs sampled from a real frame of the model's render. Small and dense on edges, large and sparse on flat regions.</span>
-      <button type="button" class="link-btn" id="hero-replay" hidden>Replay</button>
-    </p>
-  </div>
-</header>
+<div class="frame" aria-hidden="true"></div>
 
-<main>
+<nav class="tab" aria-label="Page">
+  <a class="pill" href="#top">Home</a>
+  <a class="pill" href="#results">Results</a>
+  <a class="pill" href="#method">Method</a>
+  <a class="pill pill--solid" href="https://github.com/eunoryx/4DGaussians">Code</a>
+</nav>
 
-<section class="wrap section" aria-labelledby="compare-h">
-  <div class="section__head">
-    <p class="kicker">01</p>
-    <h2 id="compare-h">Same frame, fewer Gaussians</h2>
-    <p class="section__intro">Drag the divider. Both sides are the same camera path and the same moment, rendered from the two trained models.</p>
-  </div>
-  <div class="compare" id="compare" style="--pos:50%">
-    <video class="compare__video" id="vid-ours" muted loop playsinline preload="none" poster="assets/ours-poster.jpg" data-src="assets/ours.mp4" aria-label="Render from the adaptive model"></video>
-    <video class="compare__video compare__video--top" id="vid-base" muted loop playsinline preload="none" poster="assets/baseline-poster.jpg" data-src="assets/baseline.mp4" aria-label="Render from the baseline model"></video>
-    <span class="compare__tag compare__tag--left">Baseline · 28,177</span>
-    <span class="compare__tag compare__tag--right">Ours · 22,045</span>
-    <input class="compare__range" id="compare-range" type="range" min="0" max="100" step="1" value="50" aria-label="Position of the divider between the baseline render and ours">
-    <span class="compare__handle" aria-hidden="true"><span class="compare__grip"></span></span>
-  </div>
-</section>
+<main class="page" id="top">
 
-<section class="wrap section" aria-labelledby="numbers-h">
-  <div class="section__head">
-    <p class="kicker">02</p>
-    <h2 id="numbers-h">Measured on one D&#8209;NeRF scene</h2>
-  </div>
-  <dl class="numbers">
-    <div class="number">
-      <dt>Gaussians in the final model</dt>
-      <dd><span class="number__big"><span class="accent">&minus;22</span>%</span><span class="number__detail">28,177 &rarr; 22,045</span></dd>
+  <section class="hero">
+    <div class="hero__copy">
+      <p class="label">Complexity-Aware Density Management for 4D Gaussian Splatting</p>
+      <h1>A 4D scene rendered <mark>just as well</mark> with <mark>22% fewer</mark> Gaussians<span class="cursor" aria-hidden="true"></span></h1>
+      <p class="lede">Adaptive density control that adds Gaussians where a dynamic scene is complex and removes them where it is simple.</p>
+      <p class="label label--quiet">Rishita Mohan, Shiv Nadar University</p>
     </div>
-    <div class="number">
-      <dt>Training time, fine stage</dt>
-      <dd><span class="number__big"><span class="accent">&minus;11</span>%</span><span class="number__detail">17 min 31 s &rarr; 15 min 38 s</span></dd>
-    </div>
-    <div class="number">
-      <dt>Test PSNR at 20,000 iterations</dt>
-      <dd><span class="number__big"><span class="accent">+0.23</span> dB</span><span class="number__detail">40.34 &rarr; 40.57 dB. Within run-to-run variation, so read it as no loss.</span></dd>
-    </div>
-  </dl>
-  <p class="fineprint">Scene: bouncingballs. Same config, same 20,000 iterations, same RTX 4050 laptop GPU, runs made back to back. One run per method.</p>
-</section>
 
-<section class="wrap section" aria-labelledby="density-h">
-  <div class="section__head">
-    <p class="kicker">03</p>
+    <div class="hero__visual">
+      <div class="wedge" aria-hidden="true"></div>
+      <span class="plus plus--a" aria-hidden="true"></span>
+      <span class="plus plus--b" aria-hidden="true"></span>
+      <figure class="slider">
+        <div class="crop">
+        <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+        <div class="compare" id="compare" style="--pos:50%">
+          <div class="compare__layer"><video class="compare__video" id="vid-ours" muted loop playsinline preload="none" poster="assets/ours-poster.jpg" data-src="assets/ours.mp4" aria-label="Render from the adaptive model"></video></div>
+          <div class="compare__layer compare__layer--top"><video class="compare__video" id="vid-base" muted loop playsinline preload="none" poster="assets/baseline-poster.jpg" data-src="assets/baseline.mp4" aria-label="Render from the baseline model"></video></div>
+          <div class="compare__layer" id="blobs-layer"><canvas class="compare__blobs" id="blobs" aria-hidden="true"></canvas></div>
+          <input class="compare__range" id="compare-range" type="range" min="0" max="100" step="1" value="50" aria-label="Position of the divider between the baseline render and ours">
+          <span class="compare__handle" aria-hidden="true"><span class="compare__grip"></span></span>
+        </div>
+        </div>
+        <figcaption class="slider__caption">
+          <span class="tick tick--left">baseline, 28,177</span>
+          <span class="tick tick--right">ours, 22,045</span>
+          <span class="slider__hint">Gaussians in each model. Same camera path, same frame. Drag the divider or use the arrow keys. The renders have a white background, shown here tinted to the page colour.</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="claims" id="results" aria-label="Results">
+    <p class="claim">The final model holds <span class="num">22%</span> fewer Gaussians, <span class="fig">28,177 &rarr; 22,045</span>.</p>
+    <p class="claim">The fine stage of training went from <span class="num">17m31s</span> to <span class="num">15m38s</span>.</p>
+    <p class="claim">Test PSNR went from <span class="num">40.34</span> to <span class="num">40.57</span> dB, which is within noise.</p>
+    <p class="label label--quiet claims__foot">One D&#8209;NeRF scene, one run per method, RTX 4050 laptop.</p>
+  </section>
+
+  <section class="density" aria-labelledby="density-h">
     <h2 id="density-h">Where the Gaussians end up</h2>
-    <p class="section__intro">Centres of every Gaussian in each final model, seen from the same angle on the same brightness scale. The baseline never prunes a scene this small, so strays stay scattered through empty space. Ours clears them.</p>
-  </div>
-  <div class="density">
-    <figure>
-      <img src="assets/density-baseline.webp" width="960" height="600" loading="lazy" alt="Density map of the baseline model: the plate and three balls, surrounded by a haze of stray Gaussians in empty space.">
-      <figcaption><span class="swatch swatch--base"></span>Baseline · 28,177 Gaussians</figcaption>
-    </figure>
-    <figure>
-      <img src="assets/density-ours.webp" width="960" height="600" loading="lazy" alt="Density map of the adaptive model: the same plate and balls, with the empty space around them clear.">
-      <figcaption><span class="swatch swatch--ours"></span>Ours · 22,045 Gaussians</figcaption>
-    </figure>
-  </div>
-</section>
+    <p class="density__intro">The centre of every Gaussian in each final model, drawn from the same angle with the same ink scale.</p>
 
-<section class="wrap section" aria-labelledby="plot-h">
-  <div class="section__head">
-    <p class="kicker">04</p>
-    <h2 id="plot-h">Gaussian count during training</h2>
-    <p class="section__intro">Read from the two training logs, every 100 steps.</p>
-  </div>
-  <div class="plot">
-    <p class="plot__legend">
-      <span><span class="swatch swatch--base"></span>Baseline</span>
-      <span><span class="swatch swatch--ours"></span>Ours</span>
-      <span class="plot__readout" id="plot-readout" aria-live="off"></span>
-    </p>
-    <div class="plot__canvas" id="plot" role="img" aria-label="Line chart of Gaussian count against training step. Both runs start at 2,000. The baseline rises to 28,177 and ours to 22,045; both stop growing at step 18,000, when densification ends."></div>
-  </div>
-</section>
+    <figure class="map">
+      <figcaption class="label">baseline, 28,177 Gaussians</figcaption>
+      <div class="map__img">
+        <img src="assets/density-baseline.webp" width="960" height="600" loading="lazy" alt="Density map of the baseline model: a plate with three balls, and a scatter of stray Gaussians in the empty space around them.">
+        <svg class="anno" viewBox="0 0 960 600" aria-hidden="true">
+          <circle cx="165" cy="105" r="46" class="anno__ring"/>
+          <path d="M210 112 L318 60" class="anno__line"/>
+          <text x="326" y="50">strays left in empty space</text>
+          <path d="M92 352 L132 548" class="anno__line"/>
+          <circle cx="92" cy="350" r="4" class="anno__dot"/>
+          <text x="142" y="568">rim of the plate</text>
+          <path d="M566 392 L700 536" class="anno__line"/>
+          <circle cx="565" cy="390" r="4" class="anno__dot"/>
+          <text x="944" y="566" text-anchor="end">one of the three balls</text>
+        </svg>
+      </div>
+    </figure>
 
-<section class="wrap section section--split" aria-labelledby="how-h">
-  <div class="section__head">
-    <p class="kicker">05</p>
-    <h2 id="how-h">How it works</h2>
-  </div>
-  <div class="prose">
-    <p>Every 100 iterations, each Gaussian is scored by its accumulated view-space position gradient, a sign of how poorly its part of the scene is still reconstructed. The top quarter by score is densified at a lower threshold, so detail gets more Gaussians sooner, while the middle half follows the standard rule. The bottom quarter is never densified, and its oversized Gaussians are removed. Any Gaussian that has faded below the opacity threshold is pruned at every step, where the baseline only prunes scenes above 200,000 Gaussians.</p>
-    <p class="limits"><strong>Limits.</strong> Evaluated on one D&#8209;NeRF scene with a single run per method. No ablation yet separates the pruning from the complexity-aware densification.</p>
-    <p class="cta-row">
-      <a class="btn" href="https://github.com/eunoryx/4DGaussians">View the code on GitHub</a>
-    </p>
-  </div>
-</section>
+    <figure class="map">
+      <figcaption class="label"><mark>ours</mark>, 22,045 Gaussians</figcaption>
+      <div class="map__img">
+        <img src="assets/density-ours.webp" width="960" height="600" loading="lazy" alt="Density map of the adaptive model: the same plate and balls, with the empty space around them clear.">
+        <svg class="anno" viewBox="0 0 960 600" aria-hidden="true">
+          <circle cx="165" cy="105" r="46" class="anno__ring"/>
+          <path d="M210 112 L318 60" class="anno__line"/>
+          <text x="326" y="50">same region, cleared</text>
+          <path d="M82 352 L132 548" class="anno__line"/>
+          <circle cx="82" cy="350" r="4" class="anno__dot"/>
+          <text x="142" y="568">rim still dense</text>
+        </svg>
+      </div>
+    </figure>
+  </section>
+
+  <section class="note-wrap" id="method" aria-labelledby="note-h">
+    <div class="crop note">
+      <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+      <h2 class="note__title" id="note-h">Notes and limits</h2>
+      <div class="note__body">
+        <p><strong>What I did.</strong> I changed how 4D Gaussian Splatting decides where to add and remove Gaussians. Each one gets a complexity score from its accumulated position gradient. The top quarter is densified more readily and the bottom quarter is never densified. Gaussians that have faded out are pruned at every step, which the baseline does not do on a scene this small.</p>
+        <p><strong>Limits.</strong> I tested this on one D&#8209;NeRF scene, with one run per method, on an RTX 4050 laptop. The PSNR difference is within noise. I have not yet run an ablation that separates the pruning from the complexity-aware densification.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="code" aria-label="Code">
+    <p class="code__line">The code, the training plot and the method in detail are in the README.</p>
+    <a class="pill pill--solid pill--big" href="https://github.com/eunoryx/4DGaussians">Open the repository</a>
+  </section>
+
+  <footer class="footer">
+    <p>Built in PyTorch on <a href="https://github.com/hustvl/4DGaussians">4D Gaussian Splatting</a> by Wu et al., CVPR 2024.</p>
+  </footer>
 
 </main>
-
-<footer class="wrap footer">
-  <p>Rishita Mohan, Shiv Nadar University. Built in PyTorch on <a href="https://github.com/hustvl/4DGaussians">4D Gaussian Splatting</a> by Wu et al., CVPR 2024.</p>
-</footer>
 
 <script src="assets/data.js" defer></script>
 <script src="script.js" defer></script>
